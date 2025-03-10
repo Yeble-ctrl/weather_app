@@ -1,0 +1,233 @@
+{% load static tailwind_tags %}
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+    <title>Django Tailwind</title>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta http-equiv="X-UA-Compatible" content="ie=edge">
+		{% tailwind_css %}
+	</head>
+
+	<body class="h-screen w-screen flex flex-col p-4 text-white">
+
+		<!--Content section 1-->
+		<div class="flex flex-row justify-between text-gray-800 mb-4 text-opacity-70">
+			<div class="flex flex-row justify-center">
+				<h1> <span class="font-bold">{{ data.city }},</span> {{ data.country }}</h1>
+			</div>
+			<div class="flex flex-row justify-center">
+				<h1>{{ data.time|slice:"11:16" }}</h1>
+			</div>
+		</div>
+
+
+		<!--Content section 2-->
+		<div class="bg-gradient-to-r from-sky-400 to-sky-500 flex flex-col flex-grow rounded-lg h-auto p-2 pb-0 justify-around">
+
+			<!-- Current weather stats-->
+
+			<div class="flex flex-col w-full">
+				{% if data.current.is_day == 1 %}
+					{% if data.cloud_cover < 25 %}
+
+					<div class="flex flex-row w-full justify-center">
+						<img class="h-32 w-32" src="{% static 'sun_cloud_0.png' %}"></img>
+					</div>
+					<div class="flex flex-row justify-center w-full font-semibold text-xl">
+						Clear sky
+					</div>
+
+					{% elif data.cloud_cover >= 25 and data.cloud_cover < 75 %}
+			
+					<div class="flex flex-row w-full justify-center">
+						<img class="h-32 w-32" src="{% static 'sun_cloud_75.png' %}"></img>
+					</div>
+					<div class="flex flex-row justify-center w-full font-semibold text-xl">
+						Cloudy
+					</div>
+
+					{% else %}
+
+					<div class="flex flex-row w-full justify-center">
+						<img class="h-32 w-32" src="{% static 'cloud_100.png' %}"></img>
+					</div>
+					<div class="flex flex-row justify-center w-full font-semibold text-xl">
+						Very cloudy
+					</div>
+
+					{% endif %}
+
+				{% else %}
+					
+					{% if data.cloud_cover < 25 %}
+			
+					<div class="flex flex-row w-full justify-center">
+						<img class="h-32 w-32" src="{% static 'moon_cloud_0.png' %}"></img>
+					</div>
+					<div class="flex flex-row justify-center w-full font-semibold text-xl">
+						Clear night sky
+					</div>
+
+					{% elif data.cloud_cover >= 25 and data.cloud_cover < 75 %}
+			
+					<div class="flex flex-row w-full justify-center">
+						<img class="h-32 w-32" src="{% static 'moon_cloud_75.png' %}"></img>
+					</div>
+					<div class="flex flex-row justify-center w-full font-semibold text-xl">
+						Cloudy night
+					</div>
+
+					{% else %}
+			
+					<div class="flex flex-row w-full justify-center">
+						<img class="h-32 w-32" src="{% static 'cloud_100.png' %}"></img>
+					</div>
+					<div class="flex flex-row justify-center w-full font-semibold text-xl">
+						Very cloudy
+					</div>
+
+					{% endif %}
+
+				{% endif %}
+
+				<div class="text-center font-light text-sm text-white text-opacity-70">
+					{{ data.week_day }}, {{ data.day}} {{ data.year }}
+				</div>
+			</div>
+
+			<div class="flex flex-col w-full text-white">
+				<h1 class="flex flex-row justify-center w-full font-bold text-6xl text-center">
+					{{ data.current.temperature_2m }}&#176;
+				</h1>
+			</div>
+	
+			<div class="flex flex-col w-full text-white font-light">
+				<!-- Max temp and sunrise section -->
+				<div class="flex flex-row justify-center w-full border-t-2 border-sky-200 border-opacity-70">
+					<div class="flex flex-row w-1/2 justify-center border-r-2 border-sky-200 border-opacity-70 box-content py-4">
+						<!--Max temp image icon-->
+						<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="#ffffff" height="50px" width="50px" version="1.1" id="Layer_1" viewBox="0 0 512 512" xml:space="preserve">
+							<g>
+								<g>
+									<path d="M313.466,299.658V56.914C313.466,25.536,287.944,0,256.577,0c-31.367,0-56.889,25.536-56.889,56.914v242.745    c-36.978,20.319-57.549,57.453-57.549,98.564C142.14,460.955,192.848,512,255.587,512c62.739,0,114.274-51.045,114.274-113.778    C369.86,357.111,347.599,319.978,313.466,299.658z M255.257,489.244c-50.189,0-91.022-40.831-91.022-91.022    c0-34.808,20.038-66.064,51.232-81.564c3.872-1.922,6.976-5.867,6.976-10.192V56.914c0-18.833,15.311-34.158,34.133-34.158    s34.133,15.325,34.133,34.158v249.553c0,4.325,1.785,8.27,5.657,10.192c31.194,15.5,50.242,46.756,50.242,81.564    C346.609,448.414,305.447,489.244,255.257,489.244z"/>
+								</g>
+							</g>
+							<g>
+								<g>
+									<path d="M267.955,319.406v-194.25c0-6.286-5.094-11.378-11.378-11.378c-6.283,0-11.378,5.092-11.378,11.378v194.25    c-39.822,5.539-68.926,38.769-68.926,78.817c0,43.911,35.397,79.644,79.314,79.644c43.917,0,80.14-35.733,80.14-79.644    C335.727,358.175,304.933,324.944,267.955,319.406z M255.257,455.111c-31.367,0-56.889-25.52-56.889-56.889    c0-31.364,25.522-56.889,56.889-56.889c31.367,0,56.889,25.525,56.889,56.889C312.146,429.592,286.624,455.111,255.257,455.111z"/>
+								</g>
+							</g>
+							<g>
+								<g>
+									<path d="M172.313,105.703c-4.211-4.214-11.833-4.214-16.156,0c-1.028,1.131-1.822,2.278-2.394,3.753    c-0.567,1.37-0.906,2.844-0.906,4.322c0,3.069,1.133,5.914,3.3,8.081c2.161,2.156,5.006,3.297,8.078,3.297    c3.072,0,5.917-1.142,8.078-3.297c2.161-2.167,3.3-5.011,3.3-8.081C175.613,110.825,174.357,107.855,172.313,105.703z"/>
+								</g>
+							</g>
+							<g>
+								<g>
+									<path d="M174.702,143.589c-0.572-1.366-1.366-2.622-2.389-3.753c-4.211-4.214-11.833-4.214-16.156,0    c-1.028,1.131-1.822,2.386-2.394,3.753c-0.567,1.37-0.906,2.844-0.906,4.322c0,3.069,1.133,5.914,3.3,8.081    c2.161,2.156,5.006,3.297,8.078,3.297c3.072,0,5.917-1.142,8.078-3.297c2.161-2.167,3.3-5.011,3.3-8.081    C175.613,146.433,175.385,144.958,174.702,143.589z"/>
+								</g>
+							</g>
+							<g>
+								<g>
+									<path d="M174.702,211.855c-0.572-1.367-1.367-2.622-2.389-3.753c-3.189-3.189-8.195-4.214-12.406-2.389    c-1.361,0.567-2.617,1.367-3.75,2.389c-1.028,1.131-1.822,2.278-2.394,3.753c-0.567,1.37-0.906,2.844-0.906,4.322    c0,3.069,1.133,5.914,3.3,8.081c2.161,2.156,5.006,3.297,8.078,3.297c1.478,0,2.956-0.342,4.322-0.911    c1.366-0.567,2.617-1.364,3.755-2.386c1.022-1.147,1.816-2.392,2.389-3.755c0.683-1.367,0.911-2.844,0.911-4.325    C175.613,214.7,175.385,213.225,174.702,211.855z"/>
+								</g>
+							</g>
+							<g>
+								<g>
+									<path d="M172.313,242.236c-4.328-4.214-11.95-4.214-16.156,0c-2.05,2.153-3.3,5.122-3.3,8.075c0,1.481,0.339,2.958,0.906,4.325    c0.572,1.364,1.367,2.608,2.394,3.755c2.161,2.156,5.006,3.297,8.078,3.297c3.072,0,5.917-1.142,8.078-3.297    c1.022-1.147,1.816-2.392,2.389-3.755c0.683-1.367,0.911-2.844,0.911-4.325C175.613,247.358,174.357,244.389,172.313,242.236z"/>
+								</g>
+							</g>
+							<g>
+								<g>
+									<path d="M174.702,177.722c-0.572-1.367-1.366-2.622-2.389-3.753c-4.211-4.214-11.95-4.214-16.156,0    c-1.028,1.131-1.822,2.278-2.394,3.753c-0.567,1.37-0.906,2.844-0.906,4.322c0,3.069,1.133,5.914,3.3,8.081    c2.161,2.156,5.006,3.297,8.078,3.297c1.478,0,2.956-0.342,4.322-0.911c1.366-0.567,2.617-1.364,3.755-2.386    c2.161-2.167,3.3-5.011,3.3-8.081C175.613,180.566,175.385,179.092,174.702,177.722z"/>
+								</g>
+							</g>
+						</svg>
+						<div class="flex flex-col">
+							<p>MAX TEMP</p>
+							<p class="font-semibold">{{ data.daily.temperature_2m_max.0 }}&#176;</p>
+						</div>
+					</div>
+
+					<div class="flex flex-row w-1/2 justify-center box-content py-4">
+						<!--Min temp image icon-->
+						<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="#ffffff" height="50px" width="50px" version="1.1" id="Layer_1" viewBox="0 0 512 512" xml:space="preserve">
+							<g>
+								<g>
+									<path d="M313.466,299.658V56.914C313.466,25.536,287.944,0,256.577,0c-31.367,0-56.889,25.536-56.889,56.914v242.745    c-36.978,20.319-57.549,57.453-57.549,98.564C142.14,460.955,192.848,512,255.587,512c62.739,0,114.274-51.045,114.274-113.778    C369.86,357.111,347.599,319.978,313.466,299.658z M255.257,489.244c-50.189,0-91.022-40.831-91.022-91.022    c0-34.808,20.038-66.064,51.232-81.564c3.872-1.922,6.976-5.867,6.976-10.192V56.914c0-18.833,15.311-34.158,34.133-34.158    s34.133,15.325,34.133,34.158v249.553c0,4.325,1.785,8.27,5.657,10.192c31.194,15.5,50.242,46.756,50.242,81.564    C346.609,448.414,305.447,489.244,255.257,489.244z"/>
+								</g>
+							</g>
+							<g>
+								<g>
+									<path d="M267.955,319.406v-34.961c0-6.286-5.094-11.378-11.378-11.378c-6.283,0-11.378,5.092-11.378,11.378v34.961    c-39.822,5.539-68.926,38.769-68.926,78.817c0,43.911,35.397,79.644,79.314,79.644c43.917,0,80.14-35.733,80.14-79.644    C335.727,358.175,304.933,324.944,267.955,319.406z M255.257,455.111c-31.367,0-56.889-25.52-56.889-56.889    c0-31.364,25.522-56.889,56.889-56.889c31.367,0,56.889,25.525,56.889,56.889C312.146,429.592,286.624,455.111,255.257,455.111z"/>
+								</g>
+							</g>
+							<g>
+								<g>
+									<path d="M174.702,109.455c-0.572-1.475-1.366-2.622-2.389-3.753c-4.328-4.214-11.95-4.214-16.156,0    c-1.028,1.131-1.822,2.278-2.394,3.753c-0.567,1.37-0.906,2.844-0.906,4.322c0,3.069,1.133,5.914,3.3,8.081    c2.161,2.156,5.006,3.297,8.078,3.297c3.072,0,5.917-1.142,8.078-3.297c2.161-2.167,3.3-5.011,3.3-8.081    C175.613,112.3,175.269,110.825,174.702,109.455z"/>
+								</g>
+							</g>
+							<g>
+								<g>
+									<path d="M174.702,143.589c-0.572-1.475-1.366-2.622-2.389-3.753c-3.189-3.078-8.195-4.214-12.406-2.389    c-1.478,0.567-2.617,1.367-3.75,2.389c-1.028,1.131-1.822,2.386-2.394,3.753c-0.567,1.37-0.906,2.844-0.906,4.322    c0,1.481,0.339,2.958,0.906,4.325c0.572,1.364,1.367,2.608,2.394,3.756c2.161,2.156,5.006,3.297,8.078,3.297    c3.072,0,5.917-1.142,8.078-3.297c2.161-2.167,3.3-5.011,3.3-8.081C175.613,146.433,175.269,144.958,174.702,143.589z"/>
+								</g>
+							</g>
+							<g>
+								<g>
+									<path d="M174.702,211.855c-0.572-1.475-1.367-2.622-2.389-3.753c-1.139-1.022-2.389-1.822-3.755-2.389    c-4.095-1.825-9.217-0.8-12.4,2.389c-1.028,1.131-1.822,2.386-2.394,3.753c-0.567,1.37-0.906,2.844-0.906,4.322    c0,1.481,0.339,2.958,0.906,4.325c0.572,1.364,1.367,2.608,2.394,3.756c1.133,1.022,2.389,1.819,3.75,2.386    c1.367,0.57,2.844,0.911,4.328,0.911c3.072,0,5.917-1.142,8.078-3.297c1.022-1.147,1.816-2.392,2.389-3.756    c0.683-1.367,0.911-2.844,0.911-4.325C175.613,214.7,175.269,213.225,174.702,211.855z"/>
+								</g>
+							</g>
+							<g>
+								<g>
+									<path d="M172.313,242.236c-4.211-4.214-11.833-4.214-16.156,0c-2.05,2.153-3.3,5.122-3.3,8.075c0,1.481,0.228,2.958,0.906,4.325    c0.572,1.364,1.367,2.608,2.394,3.755c2.161,2.156,5.006,3.297,8.078,3.297c3.072,0,5.917-1.142,8.078-3.297    c1.022-1.147,1.816-2.392,2.389-3.755c0.567-1.367,0.911-2.844,0.911-4.325C175.613,247.358,174.357,244.389,172.313,242.236z"/>
+								</g>
+							</g>
+							<g>
+								<g>
+									<path d="M174.702,177.722c-0.572-1.367-1.367-2.622-2.389-3.753c-1.139-1.022-2.278-1.822-3.755-2.389    c-4.211-1.825-9.217-0.8-12.4,2.389c-1.028,1.131-1.822,2.278-2.394,3.753c-0.567,1.37-0.906,2.844-0.906,4.322    c0,3.069,1.133,5.914,3.3,8.081c2.161,2.156,5.006,3.297,8.078,3.297c3.072,0,5.917-1.142,8.078-3.297    c1.022-1.147,1.816-2.392,2.389-3.755c0.683-1.367,0.911-2.844,0.911-4.325C175.613,180.566,175.385,179.092,174.702,177.722z"/>
+								</g>
+							</g>
+						</svg>
+						<div class="flex flex-col">
+							<p>MIN TEMP</p>
+							<p class="font-semibold">{{ data.daily.temperature_2m_min.0 }}&#176;</p>
+						</div>
+					</div>
+				</div>
+					
+				<!-- min temp and sunset section-->
+				<div class="flex flex-row justify-center w-full border-t-2 border-sky-200 border-opacity-70">
+					<div class="flex flex-row w-1/2 justify-center box-content py-4 border-r-2 border-sky-200 border-opacity-70">
+						<!--sunrise image icon-->
+						<svg xmlns="http://www.w3.org/2000/svg" width="50px" height="50px" viewBox="0 0 24 24" fill="none">
+							<path d="M12 10V3M12 3L9 6M12 3L15 6M6 12L5 11M18 12L19 11M3 18H21M5 21H19M7 18C7 15.2386 9.23858 13 12 13C14.7614 13 17 15.2386 17 18" stroke="#ffffff" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
+						</svg>
+						<div class="flex flex-col">
+							<p>SUNRISE</p>
+							<p class="font-semibold">{{ data.daily.sunrise.0|slice:"11:16" }}</p>
+						</div>
+					</div>
+					<div class="flex flex-row w-1/2 justify-center box-content py-4">
+						<!--Max sunset image icon-->
+						<svg xmlns="http://www.w3.org/2000/svg" width="50px" height="50px" viewBox="0 0 24 24" fill="none">
+							<path d="M6 12L5 11M18 12L19 11M3 18H21M5 21H19M7 18C7 15.2386 9.23858 13 12 13C14.7614 13 17 15.2386 17 18M12 3V10M12 10L15 7M12 10L9 7" stroke="#ffffff" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
+						</svg>
+						<div class="flex flex-col">
+							<p>SUNSET</p>
+							<p class="font-semibold">{{ data.daily.sunset.0|slice:"11:16" }}</p>
+						</div>
+					</div>	
+				</div>
+			</div>
+		</div>
+
+		<!--Content section 3-->
+		<a href="http://">
+			
+		</a>
+
+	</body>
+</html>
