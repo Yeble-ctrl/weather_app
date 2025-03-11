@@ -15,94 +15,60 @@
 
 		<!--Content section 1-->
 		<div class="flex flex-row justify-between text-gray-800 mb-4 text-opacity-70">
-			<div class="flex flex-row justify-center">
-				<h1> <span class="font-bold">{{ data.city }},</span> {{ data.country }}</h1>
-			</div>
-			<div class="flex flex-row justify-center">
-				<h1>{{ data.time|slice:"11:16" }}</h1>
-			</div>
+			<h1> <span class="font-bold">{{ data.city }},</span> {{ data.country }}</h1>
+			<h1>{{ data.time|slice:"11:16" }}</h1>
 		</div>
 
 
 		<!--Content section 2-->
-		<div class="bg-gradient-to-r from-sky-400 to-sky-500 flex flex-col flex-grow rounded-lg h-auto p-2 pb-0 justify-around">
+		<div class="flex flex-col flex-grow justify-around items-center w-full h-auto p-2 pb-0 rounded-lg bg-gradient-to-r from-sky-400 to-sky-500">
 
 			<!-- Current weather stats-->
-
-			<div class="flex flex-col w-full">
+			<div>
+				<!--Page content when it is daytime-->
 				{% if data.current.is_day == 1 %}
 					{% if data.cloud_cover < 25 %}
-
-					<div class="flex flex-row w-full justify-center">
-						<img class="h-32 w-32" src="{% static 'sun_cloud_0.png' %}"></img>
-					</div>
-					<div class="flex flex-row justify-center w-full font-semibold text-xl">
-						Clear sky
-					</div>
+					<img class="h-32 w-32" src="{% static 'sun_cloud_0.png' %}"></img>
+					<div class="text-center w-full font-semibold text-xl">Clear sky</div>
 
 					{% elif data.cloud_cover >= 25 and data.cloud_cover < 75 %}
-			
-					<div class="flex flex-row w-full justify-center">
-						<img class="h-32 w-32" src="{% static 'sun_cloud_75.png' %}"></img>
-					</div>
-					<div class="flex flex-row justify-center w-full font-semibold text-xl">
-						Cloudy
-					</div>
+					<img class="h-32 w-32" src="{% static 'sun_cloud_75.png' %}"></img>
+					<div class="text-center w-full font-semibold text-xl">Cloudy</div>
 
 					{% else %}
-
-					<div class="flex flex-row w-full justify-center">
-						<img class="h-32 w-32" src="{% static 'cloud_100.png' %}"></img>
-					</div>
-					<div class="flex flex-row justify-center w-full font-semibold text-xl">
-						Very cloudy
-					</div>
+					<img class="h-32 w-32" src="{% static 'cloud_100.png' %}"></img>
+					<div class="text-center w-full font-semibold text-xl">Very cloudy</div>
 
 					{% endif %}
-
-				{% else %}
-					
+				
+				<!--Page content when it is night time-->
+				{% else %}	
 					{% if data.cloud_cover < 25 %}
-			
-					<div class="flex flex-row w-full justify-center">
-						<img class="h-32 w-32" src="{% static 'moon_cloud_0.png' %}"></img>
-					</div>
-					<div class="flex flex-row justify-center w-full font-semibold text-xl">
-						Clear night sky
-					</div>
+					<img class="h-32 w-32" src="{% static 'moon_cloud_0.png' %}"></img>
+					<div class="text-center w-full font-semibold text-xl">Clear night sky</div>
 
 					{% elif data.cloud_cover >= 25 and data.cloud_cover < 75 %}
-			
-					<div class="flex flex-row w-full justify-center">
-						<img class="h-32 w-32" src="{% static 'moon_cloud_75.png' %}"></img>
-					</div>
-					<div class="flex flex-row justify-center w-full font-semibold text-xl">
-						Cloudy night
-					</div>
+					<img class="h-32 w-32" src="{% static 'moon_cloud_75.png' %}"></img>
+					<p class="text-center w-full font-semibold text-xl">Cloudy night</p>
 
 					{% else %}
-			
-					<div class="flex flex-row w-full justify-center">
-						<img class="h-32 w-32" src="{% static 'cloud_100.png' %}"></img>
-					</div>
-					<div class="flex flex-row justify-center w-full font-semibold text-xl">
-						Very cloudy
-					</div>
+					<img class="h-32 w-32" src="{% static 'cloud_100.png' %}"></img>
+					<p class="text-center w-full font-semibold text-xl">Very cloudy</p>
 
 					{% endif %}
 
 				{% endif %}
 
+				<!--Date display-->
 				<div class="text-center font-light text-sm text-white text-opacity-70">
 					{{ data.week_day }}, {{ data.day}} {{ data.year }}
 				</div>
 			</div>
 
-			<div class="flex flex-col w-full text-white">
-				<h1 class="flex flex-row justify-center w-full font-bold text-6xl text-center">
-					{{ data.current.temperature_2m }}&#176;
-				</h1>
-			</div>
+			<!--Current temperature display-->
+			<h1 class="flex flex-row text-white justify-center w-full font-bold text-6xl text-center">
+				{{ data.current.temperature_2m }}&#176;
+			</h1>
 	
 			<div class="flex flex-col w-full text-white font-light">
 				<!-- Max temp and sunrise section -->
@@ -225,9 +191,9 @@
 		</div>
 
 		<!--Content section 3-->
-		<a href="http://">
-			
-		</a>
+		<div>
 
+		</div>
+		
 	</body>
 </html>
