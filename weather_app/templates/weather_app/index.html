@@ -15,23 +15,23 @@
 
 		<!--Content section 1-->
 		<div class="flex flex-row justify-between text-gray-800 mb-4 text-opacity-70">
-			<h1> <span class="font-bold">{{ data.city }},</span> {{ data.country }}</h1>
-			<h1>{{ data.time|slice:"11:16" }}</h1>
+			<h1> <span class="font-bold">{{ location.city }},</span> {{ location.country }}</h1>
+			<h1>{{ date_time.time|slice:"11:16" }}</h1>
 		</div>
 
 
 		<!--Content section 2-->
-		<div class="flex flex-col flex-grow justify-around items-center w-full h-auto p-2 pb-0 rounded-lg bg-gradient-to-r from-sky-400 to-sky-500">
+		<div class="flex flex-col flex-grow justify-around items-center w-full h-auto p-2 pb-0 mb-4 rounded-lg bg-gradient-to-r from-sky-400 to-sky-500">
 
 			<!-- Current weather stats-->
 			<div>
 				<!--Page content when it is daytime-->
-				{% if data.current.is_day == 1 %}
-					{% if data.cloud_cover < 25 %}
+				{% if current.is_day == 1 %}
+					{% if current.cloud_cover < 25 %}
 					<img class="h-32 w-32" src="{% static 'sun_cloud_0.png' %}"></img>
 					<div class="text-center w-full font-semibold text-xl">Clear sky</div>
 
-					{% elif data.cloud_cover >= 25 and data.cloud_cover < 75 %}
+					{% elif current.cloud_cover >= 25 and current.cloud_cover < 75 %}
 					<img class="h-32 w-32" src="{% static 'sun_cloud_75.png' %}"></img>
 					<div class="text-center w-full font-semibold text-xl">Cloudy</div>
 
@@ -43,11 +43,11 @@
 				
 				<!--Page content when it is night time-->
 				{% else %}	
-					{% if data.cloud_cover < 25 %}
+					{% if current.cloud_cover < 25 %}
 					<img class="h-32 w-32" src="{% static 'moon_cloud_0.png' %}"></img>
 					<div class="text-center w-full font-semibold text-xl">Clear night sky</div>
 
-					{% elif data.cloud_cover >= 25 and data.cloud_cover < 75 %}
+					{% elif current.cloud_cover >= 25 and current.cloud_cover < 75 %}
 					<img class="h-32 w-32" src="{% static 'moon_cloud_75.png' %}"></img>
 					<p class="text-center w-full font-semibold text-xl">Cloudy night</p>
 
@@ -61,13 +61,13 @@
 
 				<!--Date display-->
 				<div class="text-center font-light text-sm text-white text-opacity-70">
-					{{ data.week_day }}, {{ data.day}} {{ data.year }}
+					{{ date_time.week_day }}, {{ date_time.day}} {{ date_time.month }}
 				</div>
 			</div>
 
 			<!--Current temperature display-->
 			<h1 class="flex flex-row text-white justify-center w-full font-bold text-6xl text-center">
-				{{ data.current.temperature_2m }}&#176;
+				{{ current.temperature_2m }}&#176;
 			</h1>
 	
 			<div class="flex flex-col w-full text-white font-light">
@@ -114,7 +114,7 @@
 						</svg>
 						<div class="flex flex-col">
 							<p>MAX TEMP</p>
-							<p class="font-semibold">{{ data.daily.temperature_2m_max.0 }}&#176;</p>
+							<p class="font-semibold">{{ daily.temperature_2m_max.0 }}&#176;</p>
 						</div>
 					</div>
 
@@ -159,7 +159,7 @@
 						</svg>
 						<div class="flex flex-col">
 							<p>MIN TEMP</p>
-							<p class="font-semibold">{{ data.daily.temperature_2m_min.0 }}&#176;</p>
+							<p class="font-semibold">{{ daily.temperature_2m_min.0 }}&#176;</p>
 						</div>
 					</div>
 				</div>
@@ -173,7 +173,7 @@
 						</svg>
 						<div class="flex flex-col">
 							<p>SUNRISE</p>
-							<p class="font-semibold">{{ data.daily.sunrise.0|slice:"11:16" }}</p>
+							<p class="font-semibold">{{ daily.sunrise.0|slice:"11:16" }}</p>
 						</div>
 					</div>
 					<div class="flex flex-row w-1/2 justify-center box-content py-4">
@@ -183,7 +183,7 @@
 						</svg>
 						<div class="flex flex-col">
 							<p>SUNSET</p>
-							<p class="font-semibold">{{ data.daily.sunset.0|slice:"11:16" }}</p>
+							<p class="font-semibold">{{ daily.sunset.0|slice:"11:16" }}</p>
 						</div>
 					</div>	
 				</div>
@@ -191,9 +191,24 @@
 		</div>
 
 		<!--Content section 3-->
-		<div>
+		<div class="grid grid-flow-col grid-cols-12 gap-20 overflow-x-auto text-sm text-black text-opacity-65">
+			{% for time, temperature, cloud_cover in hourly %}
+			<div class="flex flex-col justify-around items-center w-16 h-24 p-3 border-2 rounded-lg border-gray-300 hover:shadow-lg hover:shadow-sky-500 hover:bg-sky-400 hover:text-white hover:border-0 border-opacity-40">
+				<p>{{ time|slice:"11:16" }}</p>
+				{% if cloud_cover < 25 %}
+				<img class="w-10 h-10" src="{% static 'sun_cloud_0.png' %}" alt="">
 
+				{% elif cloud_cover >= 25 and cloud_cover < 75 %}
+				<img class="w-10 h-10" src="{% static 'sun_cloud_75.png' %}" alt="">
+
+				{% else %}
+				<img class="w-10 h-10" src="{% static 'cloud_100.png' %}" alt="">
+
+				{% endif %}
+				<p class="text-base font-semibold">{{ temperature }}&#176;</p>
+			</div>
+			{% endfor %}
 		</div>
-		
+
 	</body>
 </html>
