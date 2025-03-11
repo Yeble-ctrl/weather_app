@@ -1,5 +1,4 @@
 from django.shortcuts import render
-from django.http import Http404
 from datetime import datetime
 from requests import get
 from requests import exceptions
@@ -8,10 +7,22 @@ def index(request):
     """ View function for returning the home/index page"""
     try:
         data = getWeatherData()
+        current_data = data["current"]
+        daily_data = data["daily"]
+        hourly_data = zip(
+            data["hourly"]["time"], 
+            data["hourly"]["temperature_2m"], 
+            data["hourly"]["cloud_cover"]
+        )
+        date_time_data = getDateAndTime()
+        loc_data = getLocation()
+        context = {"current": current_data, "daily": daily_data, 
+        "hourly": hourly_data, "date_time": date_time_data, "location": loc_data}
+
     except exceptions.ConnectionError:
         data = "Connection Error"
 
-    return render(request, 'weather_app/index.html', context={"data": data})
+    return render(request, 'weather_app/index.html', context=context)
 
 def getWeatherData():
     """ Function for getting weather data"""
@@ -33,12 +44,9 @@ def getWeatherData():
         })
 
     wtr_data_dic = wtr_data.json() # Convert the Json response to a dictionary
-
-    # Update the weather data of the current hour with real time weather data
-    wtr_data_dic["hourly"]["temperature_2m"][0] = wtr_data_dic["current"]["temperature_2m"]
-    wtr_data_dic["hourly"]["cloud_cover"][0] = wtr_data_dic["current"]["cloud_cover"]
-    wtr_data_dic["hourly"]["time"][0] = getDateAndTime()["time"]
-    wtr_data_dic = wtr_data_dic | getLocation() | getDateAndTime() # Add location and local date and time dictionaries
+    wtr_data_dic["hourly"]["temperature_2m"][0] = wtr_data_dic["current"]["temperature_2m"] # Update the current hour temp with the current real time temp
+    wtr_data_dic["hourly"]["cloud_cover"][0] = wtr_data_dic["current"]["cloud_cover"] # Update the curremt hour cloud cover %ge with the current real time cloud cover %ge
+    wtr_data_dic["hourly"]["time"][0] = getDateAndTime()["time"] # Update the current hour value with a more accurate value
     return wtr_data_dic
 
 def getLocation():
