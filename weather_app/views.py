@@ -12,7 +12,7 @@ def index(request):
         hourly_data = zip(
             data["hourly"]["time"], 
             data["hourly"]["temperature_2m"], 
-            data["hourly"]["cloud_cover"]
+            data["hourly"]["cloud_cover_low"]
         )
         date_time_data = getDateAndTime()
         loc_data = getLocation()
@@ -23,6 +23,22 @@ def index(request):
         data = "Connection Error"
 
     return render(request, 'weather_app/index.html', context=context)
+
+def weekly_forecast(request):
+    """View function to get weeky weather forecast"""
+    try:
+        data = getWeatherData()
+        weekly_data = zip(
+            data["daily"]["time"],
+            data["daily"]["temperature_2m_max"],
+            data["daily"]["temperature_2m_min"]
+        )
+        context = {"weekly_data": weekly_data}
+
+    except exceptions.ConnectionError:
+        data = "connection error"
+    
+    return render(request, 'weather_app/weekly_forecast.html', context=context)
 
 def getWeatherData():
     """ Function for getting weather data"""
@@ -38,14 +54,14 @@ def getWeatherData():
             "longitude": lon,
             "timezone": "auto",
             "forecast_hours": 12,
-            "current": ["is_day", "temperature_2m", "cloud_cover"],
+            "current": ["is_day", "temperature_2m", "cloud_cover_low"],
             "daily": ["temperature_2m_max", "temperature_2m_min", "sunset", "sunrise"],
-            "hourly": ["temperature_2m", "cloud_cover"]
+            "hourly": ["temperature_2m", "cloud_cover_low"]
         })
 
     wtr_data_dic = wtr_data.json() # Convert the Json response to a dictionary
     wtr_data_dic["hourly"]["temperature_2m"][0] = wtr_data_dic["current"]["temperature_2m"] # Update the current hour temp with the current real time temp
-    wtr_data_dic["hourly"]["cloud_cover"][0] = wtr_data_dic["current"]["cloud_cover"] # Update the curremt hour cloud cover %ge with the current real time cloud cover %ge
+    wtr_data_dic["hourly"]["cloud_cover_low"][0] = wtr_data_dic["current"]["cloud_cover_low"] # Update the curremt hour cloud cover %ge with the current real time cloud cover %ge
     wtr_data_dic["hourly"]["time"][0] = getDateAndTime()["time"] # Update the current hour value with a more accurate value
     return wtr_data_dic
 
