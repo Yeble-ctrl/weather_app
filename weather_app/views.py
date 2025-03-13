@@ -10,18 +10,26 @@ def index(request):
         data = getWeatherData()
         current_data = data["current"]
         daily_data = data["daily"]
+        hourly_data = data["hourly"]
+
+        # Add VMO weather description for each weather_code
+        hourly_data["weather_desc"] = []
+        for weather_code in hourly_data["weather_code"]:
+            hourly_data["weather_desc"].append(VMO_DESCRIPTION_DATA[str(weather_code)])
+        
+        # Reassign the hourly data varible with the same data but zipped for easy iteration in the templates
         hourly_data = zip(
-            data["hourly"]["time"], 
-            data["hourly"]["temperature_2m"], 
-            data["hourly"]["cloud_cover_low"]
+            hourly_data["time"], 
+            hourly_data["temperature_2m"], 
+            hourly_data["cloud_cover_low"],
+            hourly_data["weather_desc"]
         )
         date_time_data = getCurrDateAndTime()
         loc_data = getLocation()
 
-        print(current_data)
-
+        # Create a data context with all of the extracted data
         context = {"current": current_data, "daily": daily_data, 
-        "hourly": hourly_data, "date_time": date_time_data, "location": loc_data}
+            "hourly": hourly_data, "date_time": date_time_data, "location": loc_data}
 
     except exceptions.ConnectionError:
         data = "Connection Error"
@@ -37,12 +45,20 @@ def weekly_forecast(request):
         for i in range(0, len(data["time"])):
             data["time"][i] = changeDateFormat(data["time"][i])
 
+        # Add an intepretation of the VMO weather code values to the weather dictionary
+        data["weather_desc"] = []
+        for weather_code in data["weather_code"]:
+            data["weather_desc"].append(VMO_DESCRIPTION_DATA[str(weather_code)])
+
+        # Extract and zip the data for easy iterating in the templates
         weekly_data = zip(
             data["time"],
             data["temperature_2m_max"],
-            data["temperature_2m_min"]
+            data["temperature_2m_min"],
+            data["weather_desc"]
         )
-        context = {"weekly_data": weekly_data}
+        location = getLocation()
+        context = {"weekly_data": weekly_data, "location": location}
 
     except exceptions.ConnectionError:
         data = "connection error"
@@ -64,8 +80,8 @@ def getWeatherData():
             "timezone": "auto",
             "forecast_hours": 12,
             "current": ["is_day", "temperature_2m", "cloud_cover_low", "weather_code"],
-            "daily": ["temperature_2m_max", "temperature_2m_min", "sunset", "sunrise"],
-            "hourly": ["temperature_2m", "cloud_cover_low"]
+            "daily": ["temperature_2m_max", "temperature_2m_min", "sunset", "sunrise", "weather_code"],
+            "hourly": ["temperature_2m", "cloud_cover_low", "weather_code"]
         })
 
     wtr_data_dic = wtr_data.json() # Convert the Json response to a dictionary
