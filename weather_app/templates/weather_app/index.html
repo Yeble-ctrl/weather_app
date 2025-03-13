@@ -11,10 +11,10 @@
 		{% tailwind_css %}
 	</head>
 
-	<body class="h-screen w-screen flex flex-col p-4 text-white">
+	<body class="min-h-screen w-screen flex flex-col p-4 text-white">
 
 		<!--Content section 1-->
-		<div class="flex flex-row justify-between text-gray-800 mb-4 text-opacity-70">
+		<div class="flex flex-row justify-between text-gray-800 mb-4 text-opacity-80">
 			<h1> <span class="font-bold">{{ location.city }},</span> {{ location.country }}</h1>
 			<h1>{{ date_time.time|slice:"11:16" }}</h1>
 		</div>
@@ -25,40 +25,8 @@
 
 			<!-- Current weather stats-->
 			<div>
-				<!--Page content when it is daytime-->
-				{% if current.is_day == 1 %}
-					{% if current.cloud_cover < 25 %}
-					<img class="h-32 w-32" src="{% static 'sun_cloud_0.png' %}"></img>
-					<div class="text-center w-full font-semibold text-xl">Clear sky</div>
-
-					{% elif current.cloud_cover >= 25 and current.cloud_cover < 75 %}
-					<img class="h-32 w-32" src="{% static 'sun_cloud_75.png' %}"></img>
-					<div class="text-center w-full font-semibold text-xl">Cloudy</div>
-
-					{% else %}
-					<img class="h-32 w-32" src="{% static 'cloud_100.png' %}"></img>
-					<div class="text-center w-full font-semibold text-xl">Very cloudy</div>
-
-					{% endif %}
-				
-				<!--Page content when it is night time-->
-				{% else %}	
-					{% if current.cloud_cover < 25 %}
-					<img class="h-32 w-32" src="{% static 'moon_cloud_0.png' %}"></img>
-					<div class="text-center w-full font-semibold text-xl">Clear night sky</div>
-
-					{% elif current.cloud_cover >= 25 and current.cloud_cover < 75 %}
-					<img class="h-32 w-32" src="{% static 'moon_cloud_75.png' %}"></img>
-					<p class="text-center w-full font-semibold text-xl">Cloudy night</p>
-
-					{% else %}
-					<img class="h-32 w-32" src="{% static 'cloud_100.png' %}"></img>
-					<p class="text-center w-full font-semibold text-xl">Very cloudy</p>
-
-					{% endif %}
-
-				{% endif %}
-
+				<img class="h-32 w-32" src="{% static current.weather_desc.day.image %}"></img>
+				<div class="text-center w-full font-semibold text-xl">{{ current.weather_desc.day.description }}</div>
 				<!--Date display-->
 				<div class="text-center font-light text-sm text-white text-opacity-70">
 					{{ date_time.week_day }}, {{ date_time.day}} {{ date_time.month }}
@@ -191,20 +159,17 @@
 		</div>
 
 		<!--Content section 3-->
+		<!--Display 12 hour forecast of the weather-->
 		<div class="grid grid-flow-col grid-cols-12 gap-20 overflow-x-auto text-sm text-black text-opacity-65">
-			{% for time, temperature, cloud_cover in hourly %}
+			{% for time, temperature, cloud_cover_low, weather_desc in hourly %}
 			<div class="flex flex-col justify-around items-center w-16 h-24 p-3 border-2 rounded-lg border-gray-300 hover:shadow-lg hover:shadow-sky-500 hover:bg-sky-400 hover:text-white hover:border-0 border-opacity-40">
+				<!--Dispay the time/hour-->
 				<p>{{ time|slice:"11:16" }}</p>
-				{% if cloud_cover < 25 %}
-				<img class="w-10 h-10" src="{% static 'sun_cloud_0.png' %}" alt="">
 
-				{% elif cloud_cover >= 25 and cloud_cover < 75 %}
-				<img class="w-10 h-10" src="{% static 'sun_cloud_75.png' %}" alt="">
+				<!--Display the corresponding icon-->
+				<img class="w-10 h-10" src="{% static weather_desc.day.image %}" alt="">
 
-				{% else %}
-				<img class="w-10 h-10" src="{% static 'cloud_100.png' %}" alt="">
-
-				{% endif %}
+				<!--Display the temperature-->
 				<p class="text-base font-semibold">{{ temperature }}&#176;</p>
 			</div>
 			{% endfor %}
