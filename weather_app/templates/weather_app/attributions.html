@@ -1,0 +1,32 @@
+{% load static tailwind_tags %}
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+    <title>Django Tailwind</title>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta http-equiv="X-UA-Compatible" content="ie=edge">
+		{% tailwind_css %}
+	</head>
+
+    <body class="bg-sky-500 text-white font-light p-2">
+        <a href="{% url 'weather_app:index' %}">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 42 42"><path fill="#ffffff" fill-rule="evenodd" d="M27.066 1L7 21.068l19.568 19.569l4.934-4.933l-14.637-14.636L32 5.933z"/></svg>
+        </a>
+        <p class="mt-2">Here's a list to all the third party resources I used for the project: </p>
+        <ul>
+            <p>
+                <a href="https://www.google.com/url?sa=t&source=web&rct=j&opi=89978449&url=https://www.freepik.com/&ved=2ahUKEwiploTdh6OMAxWiQ0EAHR8jFlkQFnoECAoQAQ&usg=AOvVaw0zX5Zd1uJpzdByAvp7TQaI" target="_blank" rel="noopener noreferrer">
+                    <span class="font-semibold underline decoration-2 hover:decoration-yellow-400">Freepik </span>- Icons
+                </a>
+            </p>
+            <p>
+                <a href="https://github.com/Leftium/weather-sense.git">
+                    <span class="font-semibold underline decoration-2 hover:decoration-yellow-400">Weather-sense</span>(github repo) - Icons
+                </a>
+            </p>
+        </ul>
+    </body>
+</html>
