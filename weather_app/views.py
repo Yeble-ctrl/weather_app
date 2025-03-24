@@ -6,6 +6,9 @@ from requests import get
 from requests import exceptions
 from weather_app.vmo_description_data import VMO_DESCRIPTION_DATA
 
+# Global variable for temperature units. It is set to celsius as default value.
+temp_units = 'celsius'
+
 def index(request):
     """ View function for returning the home/index page"""
     try:
@@ -84,6 +87,12 @@ def attributions(request):
     """View for rendering gthe attributions pages"""
     return render(request, 'weather_app/attributions.html')
 
+def set_temp_units(request, units):
+    """"View function for setting the temperature units"""
+    global temp_units
+    temp_units = units
+    return redirect('weather_app:index')
+
 # ----------- Class utility functions -------------#
 def getWeatherData():
     """ Function for getting weather data"""
@@ -91,20 +100,21 @@ def getWeatherData():
     url = 'https://api.open-meteo.com/v1/forecast' # API call URL
     lat = getLocation().get('lat') # Get latitude value
     lon = getLocation().get('lon') # get longitude value
-
-    wtr_data = get(url=url, 
-        params={
-            # Make and API call with the given parameters
+    params = {
+            # Parameters for the API call
             "latitude": lat,
             "longitude": lon,
             "timezone": "auto",
+            "temperature_unit": temp_units,
             "forecast_hours": 12,
             "current": ["is_day", "temperature_2m", "cloud_cover_low", "weather_code"],
             "daily": ["temperature_2m_max", "temperature_2m_min", "sunset", "sunrise", "weather_code"],
             "hourly": ["temperature_2m", "cloud_cover_low", "weather_code"]
-        })
+        }
+    wtr_data = get(url=url, params=params)
 
     wtr_data_dic = wtr_data.json() # Convert the Json response to a dictionary
+    print(wtr_data_dic)
     wtr_data_dic["hourly"]["temperature_2m"][0] = wtr_data_dic["current"]["temperature_2m"] # Update the current hour temp with the current real time temp
     wtr_data_dic["hourly"]["cloud_cover_low"][0] = wtr_data_dic["current"]["cloud_cover_low"] # Update the curremt hour cloud cover %ge with the current real time cloud cover %ge
     wtr_data_dic["hourly"]["time"][0] = getCurrDateAndTime()["time"] # Update the current hour value with a more accurate value
