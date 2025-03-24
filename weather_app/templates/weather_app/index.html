@@ -11,13 +11,41 @@
 		{% tailwind_css %}
 	</head>
 
-	<body class="min-h-screen w-screen flex flex-col p-4 text-white">
+	<body class="relative min-h-screen w-screen flex flex-col p-4 text-white">
+
+		<!--Menu section-->
+		<menu id="menu" class="hidden bg-white text-gray-800 text-sm rounded-md drop-shadow-lg font-semibold p-2 fixed top-10 left-0">
+			<a href="{% url 'weather_app:index' %}"><p class="hover:bg-sky-500 hover:text-white p-1 w-fit rounded-md">Home</p></a> <hr/>
+			<a href="{% url 'weather_app:weekly_forecast' %}"><p class="hover:bg-sky-500 hover:text-white p-1 w-fit rounded-md">7 days forecast</p></a><hr/>
+			<a href="http://"><p class="hover:bg-sky-500 hover:text-white p-1 w-fit rounded-md">Customization</p></a><hr/>
+			<a href="http://"><p class="hover:bg-sky-500 hover:text-white p-1 w-fit rounded-md">Attributions</p></a><hr/>
+			<a href="http://"><p class="hover:bg-sky-500 hover:text-white p-1 w-fit rounded-md">Leave a comment</p></a>
+		</menu>
+
+		<button class="text-black" id="menu_button">
+			<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-logs"><path d="M13 12h8"/><path d="M13 18h8"/><path d="M13 6h8"/><path d="M3 12h1"/><path d="M3 18h1"/><path d="M3 6h1"/><path d="M8 12h1"/><path d="M8 18h1"/><path d="M8 6h1"/></svg>
+		</button>
+
+		<script>
+			/*This Script adds interactivity to the menu button for 
+			displaying and hiding the menu. */
+			const btn = document.getElementById("menu_button");
+			const menu = document.getElementById("menu");
+			btn.addEventListener("click", (e)=> {
+				if(menu.style.display === "block"){
+					menu.style.display = "none";
+				}
+				else{
+					menu.style.display = "block";
+				}
+			})
+		</script>
 
 		<!--Content section 1-->
-		<div class="flex flex-row justify-between text-gray-800 mb-4 text-opacity-80">
+		<header class="flex flex-row justify-between text-gray-800 mb-4">
 			<h1> <span class="font-bold">{{ location.city }},</span> {{ location.country }}</h1>
 			<h1>{{ date_time.time|slice:"11:16" }}</h1>
-		</div>
+		</header>
 
 
 		<!--Content section 2-->
