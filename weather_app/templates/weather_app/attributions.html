@@ -1,17 +1,9 @@
+{% extends 'weather_app/base.html '%}
 {% load static tailwind_tags %}
 {% load static %}
 
-<!DOCTYPE html>
-<html lang="en">
-	<head>
-    <title>Django Tailwind</title>
-		<meta charset="UTF-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<meta http-equiv="X-UA-Compatible" content="ie=edge">
-		{% tailwind_css %}
-	</head>
-
-    <body class="bg-sky-500 text-white font-light p-2">
+{% block content %}
+    <div class="bg-sky-500 min-h-screen text-white font-light p-2 mt-2 rounded-lg">
         <a href="{% url 'weather_app:index' %}">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 42 42"><path fill="#ffffff" fill-rule="evenodd" d="M27.066 1L7 21.068l19.568 19.569l4.934-4.933l-14.637-14.636L32 5.933z"/></svg>
         </a>
@@ -28,5 +20,5 @@
                 </a>
             </p>
         </ul>
-    </body>
-</html>
+    </div>
+{% endblock content %}
