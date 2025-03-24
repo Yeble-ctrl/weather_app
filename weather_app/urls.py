@@ -7,5 +7,6 @@ urlpatterns = [
     path('', views.index, name="index"),
     path('weekly_forecast/', views.weekly_forecast, name="weekly_forecast"),
     path('comment/', views.comment, name="comment"),
-    path('attributions/', views.attributions, name="attrib")
+    path('attributions/', views.attributions, name="attrib"),
+    path('set_temp_units/<str:units>/', views.set_temp_units, name="set_temp_units")
 ]
