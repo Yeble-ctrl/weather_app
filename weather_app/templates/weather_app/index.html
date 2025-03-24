@@ -18,8 +18,8 @@
 			<a href="{% url 'weather_app:index' %}"><p class="hover:bg-sky-500 hover:text-white p-1 w-fit rounded-md">Home</p></a> <hr/>
 			<a href="{% url 'weather_app:weekly_forecast' %}"><p class="hover:bg-sky-500 hover:text-white p-1 w-fit rounded-md">7 days forecast</p></a><hr/>
 			<a href="http://"><p class="hover:bg-sky-500 hover:text-white p-1 w-fit rounded-md">Customization</p></a><hr/>
-			<a href="http://"><p class="hover:bg-sky-500 hover:text-white p-1 w-fit rounded-md">Attributions</p></a><hr/>
-			<a href="http://"><p class="hover:bg-sky-500 hover:text-white p-1 w-fit rounded-md">Leave a comment</p></a>
+			<a href="{% url 'weather_app:attrib' %}"><p class="hover:bg-sky-500 hover:text-white p-1 w-fit rounded-md">Attributions</p></a><hr/>
+			<a href="{% url 'weather_app:comment' %}"><p class="hover:bg-sky-500 hover:text-white p-1 w-fit rounded-md">Leave a comment</p></a>
 		</menu>
 
 		<button class="text-black" id="menu_button">

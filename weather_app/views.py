@@ -78,8 +78,13 @@ def comment(request):
             return redirect('weather_app:index')
 
     context = {"form": form}
-    return render(request, 'comment.html', context=context)
+    return render(request, 'weather_app/comment.html', context=context)
 
+def attributions(request):
+    """View for rendering gthe attributions pages"""
+    return render(request, 'weather_app/attributions.html')
+
+# ----------- Class utility functions -------------#
 def getWeatherData():
     """ Function for getting weather data"""
 

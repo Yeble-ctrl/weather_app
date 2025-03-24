@@ -11,7 +11,7 @@
 		{% tailwind_css %}
 	</head>
 
-    <body class="flex flex-col text-sm p-2 gap-4 bg-sky-400 font-semibold">
+    <body class="flex flex-col text-sm p-2 gap-4 bg-sky-100 font-semibold">
         <p>Please add your comment: </p>
 		<form action="{% url 'weather_app:comment' %}" method="post">
 			{% csrf_token %}
