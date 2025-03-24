@@ -1,4 +1,6 @@
-from django.shortcuts import render
+from weather_app.models import Comment
+from weather_app.forms import commentForm
+from django.shortcuts import render, redirect
 from datetime import datetime, date
 from requests import get
 from requests import exceptions
@@ -64,6 +66,19 @@ def weekly_forecast(request):
         data = "connection error"
     
     return render(request, 'weather_app/weekly_forecast.html', context=context)
+
+def comment(request):
+    """View for adding a comment"""
+    if request.method != 'POST':
+        form = commentForm()
+    else:
+        form = commentForm(data=request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('weather_app:index')
+
+    context = {"form": form}
+    return render(request, 'comment.html', context=context)
 
 def getWeatherData():
     """ Function for getting weather data"""
