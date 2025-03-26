@@ -1,8 +1,9 @@
+from django import http
 from weather_app.models import Comment
 from weather_app.forms import commentForm
 from django.shortcuts import render, redirect
 from datetime import datetime, date
-from requests import get
+from requests import get, codes
 from requests import exceptions
 from weather_app.vmo_description_data import VMO_DESCRIPTION_DATA
 
@@ -36,10 +37,15 @@ def index(request):
         context = {"current": current_data, "daily": daily_data, 
             "hourly": hourly_data, "date_time": date_time_data, "location": loc_data}
 
-    except exceptions.ConnectionError:
-        data = "Connection Error"
+        return render(request, 'weather_app/index.html', context=context)
 
-    return render(request, 'weather_app/index.html', context=context)
+    except exceptions.ConnectionError:
+        data = "Connection Error\nPlease check if your internet connection is working properly..."
+        return render(request, 'weather_app/errors.html', context={"error_msg": data})
+
+    except exceptions.ReadTimeout:
+        data = "Your internet is too slow :("
+        return render(request, 'weather_app/errors.html', context={"error_msg": data})
 
 def weekly_forecast(request):
     """View function to get weeky weather forecast"""
@@ -112,9 +118,14 @@ def getWeatherData():
             "hourly": ["temperature_2m", "cloud_cover_low", "weather_code"]
         }
     wtr_data = get(url=url, params=params)
+    print(wtr_data.status_code)
+    if wtr_data.status_code == codes['bad_request']:
+        raise http.HttpResponseBadRequest
+
+    if wtr_data.status_code == codes['too_many']:
+        raise http.HttpResponseBadRequest
 
     wtr_data_dic = wtr_data.json() # Convert the Json response to a dictionary
-    print(wtr_data_dic)
     wtr_data_dic["hourly"]["temperature_2m"][0] = wtr_data_dic["current"]["temperature_2m"] # Update the current hour temp with the current real time temp
     wtr_data_dic["hourly"]["cloud_cover_low"][0] = wtr_data_dic["current"]["cloud_cover_low"] # Update the curremt hour cloud cover %ge with the current real time cloud cover %ge
     wtr_data_dic["hourly"]["time"][0] = getCurrDateAndTime()["time"] # Update the current hour value with a more accurate value
